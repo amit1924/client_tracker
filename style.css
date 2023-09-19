@@ -1,0 +1,214 @@
+Reset default margin and padding * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Apply styles to the body and wrapper to create equal parts layout */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #000000;
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Apply styles to header, main, aside, and footer sections */
+/* Apply styles to header with typewriter animation */
+/* Apply styles to header */
+header {
+  background-color: #c68110;
+  color: linear-gradient(
+    45deg,
+    #ff5733 0%,
+    #ffbd33 20%,
+    #33ff57 40%,
+    #33ffbd 60%,
+    #5733ff 80%,
+    #bd33ff 100%
+  );
+  padding: 20px;
+  text-align: center;
+}
+
+/* Apply styles to the typing animation */
+#typingHeading {
+  overflow: hidden;
+  border-right: 1px solid white;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: 2px;
+  animation: typing 5s steps(40) infinite, blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: white;
+  }
+}
+
+/* Content container with a subtle animation */
+.content {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.left-section,
+.right-section {
+  flex: 1;
+  background-color: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  transition: transform 0.3s ease-in-out;
+  color: rgb(255, 0, 0);
+}
+
+.left-section {
+  padding: 20px;
+  margin-right: 20px;
+}
+
+/* Rest of your CSS styles for input fields, buttons, and other elements */
+
+/* Apply animation on hover to the content container */
+/* .content:hover {
+    transform: translateY(-5px);
+} */
+
+/* Apply animation on hover to the left and right sections */
+/* .left-section:hover,
+.right-section:hover {
+    transform: translateY(-5px);
+} */
+
+/* Main section with animations */
+main {
+  display: flex;
+  flex-grow: 1;
+  flex-basis: 0;
+  justify-content: space-between;
+  overflow: hidden; /* Prevent main from overflowing */
+  font-size: 20px;
+}
+
+.form-section,
+.entries-section {
+  flex: 1;
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow-y: auto; /* Add vertical scrollbar if needed */
+  max-height: calc(100vh - 150px); /* Adjust the max-height as needed */
+}
+
+.form-section {
+  margin-left: 0;
+}
+
+/* Apply additional styles to form and buttons */
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+form label {
+  flex-basis: calc(50% - 10px);
+  margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="date"],
+form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form input[type="submit"],
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form input[type="submit"]:hover,
+button:hover {
+  background-color: #0657f9;
+}
+
+/* Apply styles to aside (social media) */
+aside {
+  background-color: #000000;
+  padding: 20px;
+  flex-shrink: 0; /* Prevent aside from shrinking */
+  font-size: 30px;
+}
+
+.socialMedia h2 {
+  margin-bottom: 10px;
+}
+
+.socialMedia a {
+  font-size: 24px;
+  margin-right: 10px;
+  color: #031ff0;
+  text-decoration: none;
+}
+
+.socialMedia a:hover {
+  color: #01fb48;
+}
+.socialMedia i {
+    font-size: 72px; /* Adjust the size as needed */
+}
+/* Apply styles to footer */
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+@media screen and (max-width: 768px) {
+  main {
+    flex-direction: column;
+  }
+
+  .form-section,
+  .entries-section {
+    margin: 10px;
+  }
+}

@@ -69,6 +69,8 @@ function displayEntry(entry) {
         <p>Reminder: ${entry.reminder}</p>
         <button class="downloadEntryCSV">Download Entry as CSV</button>
         <button class="downloadEntryPDF">Download Entry as PDF</button>
+        <button class="edit-entry">Edit</button>
+        <button class="delete-entry">Delete</button>
     `;
 
   entryDiv.innerHTML = entryHTML;
@@ -85,137 +87,202 @@ function displayEntry(entry) {
   downloadButtonPDF.addEventListener("click", function () {
     downloadEntryAsPDF(entry);
   });
+
+  // Add event listener to the edit button
+  const editButton = entryDiv.querySelector(".edit-entry");
+  editButton.addEventListener("click", function () {
+    openEditForm(entry, entryDiv);
+  });
+
+  // Add event listener to the delete button
+  const deleteButton = entryDiv.querySelector(".delete-entry");
+  deleteButton.addEventListener("click", function () {
+    deleteEntry(entryDiv);
+  });
 }
 
-// Function to download an entry as a CSV file
+// Function to open an edit form
+function openEditForm(entry, entryDiv) {
+  // You can create form fields and populate them with entry data here
+  // Implement the logic to update the entry and display changes
+  // Example: Create form fields, update entry object, update displayed entry
+  const editForm = document.createElement("form");
+  editForm.innerHTML = `
+        <!-- Create form fields and populate them with entry data here -->
+        <label for="editName">Edit Name:</label>
+        <input type="text" id="editName" name="editName" value="${entry.name}" required /><br /><br />
+        <!-- Create other form fields and populate them similarly -->
+
+        <button type="button" class="save-edit">Save</button>
+        <button type="button" class="cancel-edit">Cancel</button>
+    `;
+
+  // Add event listener to the "Save" button
+  const saveEditButton = editForm.querySelector(".save-edit");
+  saveEditButton.addEventListener("click", function () {
+    saveEditChanges(entry, entryDiv, editForm);
+  });
+
+  // Add event listener to the "Cancel" button
+  const cancelEditButton = editForm.querySelector(".cancel-edit");
+  cancelEditButton.addEventListener("click", function () {
+    closeEditForm(entryDiv, editForm);
+  });
+
+  entryDiv.appendChild(editForm);
+}
+
+// Function to save edit changes
+function saveEditChanges(entry, entryDiv, editForm) {
+  // Retrieve updated data from edit form fields
+  // Update the entry object with the new data
+  // Update the displayed entry with the updated data
+  // Close the edit form
+  const updatedName = document.getElementById("editName").value;
+  // Retrieve and update other fields similarly
+
+  entry.name = updatedName;
+  // Update other entry fields similarly
+
+  // Update the displayed entry with the updated data
+  updateDisplayedEntry(entryDiv, entry);
+
+  // Close the edit form
+  closeEditForm(entryDiv, editForm);
+}
+
+// Function to update the displayed entry after editing
+function updateDisplayedEntry(entryDiv, updatedEntry) {
+  // Implement logic to update the displayed entry with updated data
+  // You can replace the innerHTML of entryDiv with the updated data
+  // Example:
+  entryDiv.innerHTML = `
+        <h2>${updatedEntry.name}</h2>
+        <p>Country: ${updatedEntry.country}</p>
+        <!-- Update other fields similarly -->
+        <button class="downloadEntryCSV">Download Entry as CSV</button>
+        <button class="downloadEntryPDF">Download Entry as PDF</button>
+        <button class="edit-entry">Edit</button>
+        <button class="delete-entry">Delete</button>
+    `;
+}
+
+// Function to close the edit form
+function closeEditForm(entryDiv, editForm) {
+  // Remove the edit form from the entryDiv
+  entryDiv.removeChild(editForm);
+}
+
+// Function to delete an entry
+function deleteEntry(entryDiv) {
+  // Remove the entryDiv from the entriesContainer
+  entriesContainer.removeChild(entryDiv);
+}
+
+// Function to handle CSV download
 function downloadEntryAsCSV(entry) {
-  const csvData = [
-    [
-      "Name",
-      "Country",
-      "City",
-      "Contact Number",
-      "Email",
-      "Expertise",
-      "Rate",
-      "Notice Period",
-      "Experience",
-      "Payg",
-      "Date",
-      "Day",
-      "Description",
-      "Reminder",
-    ],
-    [
-      entry.name,
-      entry.country,
-      entry.city,
-      entry.contactNumber,
-      entry.email,
-      entry.expertise,
-      entry.rate,
-      entry.noticePeriod,
-      entry.experience,
-      entry.payg,
-      entry.date,
-      entry.day,
-      entry.description,
-      entry.reminder,
-    ],
-  ];
+  // Create a CSV string from the entry data
+  const csvData = `Name,Contact Number,Email,Expertise,Rate,Country,City,Notice Period,Experience,Payg,Date,Day,Description,Reminder\n
+                   ${entry.name},${entry.contactNumber},${entry.email},${entry.expertise},${entry.rate},${entry.country},${entry.city},${entry.noticePeriod},${entry.experience},${entry.payg},${entry.date},${entry.day},${entry.description},${entry.reminder}\n`;
 
-  // Convert the CSV data to a string
-  const csvString = csvData.map((row) => row.join(",")).join("\n");
+  // Create a Blob containing the CSV data
+  const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
 
-  // Create a Blob object containing the CSV data
-  const blob = new Blob([csvString], { type: "text/csv" });
+  // Create a temporary anchor element for downloading
+  const link = document.createElement("a");
+  link.href = window.URL.createObjectURL(blob);
 
-  // Create a temporary URL for the Blob
-  const url = window.URL.createObjectURL(blob);
+  // Set the filename for the download
+  link.download = "entry.csv";
 
-  // Create a temporary anchor element to trigger the download
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "tracker_entry.csv";
-  document.body.appendChild(a);
-  a.click();
-
-  // Clean up by revoking the Blob URL
-  window.URL.revokeObjectURL(url);
-
-  // Remove the temporary anchor element
-  document.body.removeChild(a);
+  // Trigger the click event to start the download
+  link.click();
 }
 
-// Function to download an entry as a PDF file
-// Function to download an entry as a PDF file
-// function downloadEntryAsPDF(entry) {
-//     // Create a div element to hold the content of the PDF
-//     const pdfContent = document.createElement('div');
-//     pdfContent.innerHTML = `
-//         <h2>${entry.name}</h2>
-//         <p>Country: ${entry.country}</p>
-//         <p>City: ${entry.city}</p>
-//         <p>Contact Number: ${entry.contactNumber}</p>
-//         <p>Email: ${entry.email}</p>
-//         <p>Expertise: ${entry.expertise}</p>
-//         <p>Rate: ${entry.rate}</p>
-//         <p>Notice Period: ${entry.noticePeriod}</p>
-//         <p>Experience: ${entry.experience}</p>
-//         <p>Payg: ${entry.payg}</p>
-//         <p>Date: ${entry.date}</p>
-//         <p>Day: ${entry.day}</p>
-//         <p>Description: ${entry.description}</p>
-//         <p>Reminder: ${entry.reminder}</p>
-//     `;
+// Function to handle PDF download
+function downloadEntryAsPDF(entry) {
+  // Create a PDF document
+  const pdfDoc = new jsPDF();
+  
+  // Define the content for the PDF (you can customize this)
+  const pdfContent = `
+    Name: ${entry.name}
+    Contact Number: ${entry.contactNumber}
+    Email: ${entry.email}
+    Expertise: ${entry.expertise}
+    Rate: ${entry.rate}
+    Country: ${entry.country}
+    City: ${entry.city}
+    Notice Period: ${entry.noticePeriod}
+    Experience: ${entry.experience}
+    Payg: ${entry.payg}
+    Date: ${entry.date}
+    Day: ${entry.day}
+    Description: ${entry.description}
+    Reminder: ${entry.reminder}
+  `;
+  
+  // Add the content to the PDF
+  pdfDoc.text(pdfContent, 10, 10);
+  
+  // Save or download the PDF
+  pdfDoc.save("entry.pdf");
+}
 
-//     // Options for html2pdf
-//     const pdfOptions = {
-//         margin: 10,
-//         filename: 'tracker_entry.pdf',
-//         image: { type: 'jpeg', quality: 0.98 },
-//         html2canvas: { scale: 2 },
-//         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-//     };
 
-//     // Generate PDF from the content
-//     const element = pdfContent; // Element to be converted to PDF
-//     html2pdf().from(element).set(pdfOptions).outputPdf().then(function(pdf) {
-//         // Create a Blob object containing the PDF data
-//         const blob = new Blob([pdf], { type: 'application/pdf' });
+// Function to handle form validation and error handling
+function validateForm() {
+  // Get the form input values
+  const name = document.getElementById("name").value;
+  const contactNumber = document.getElementById("contactNumber").value;
+  const email = document.getElementById("email").value;
+  const expertise = document.getElementById("expertise").value;
+  const rate = document.getElementById("rate").value;
+  const country = document.getElementById("country").value;
+  const city = document.getElementById("city").value;
+  const noticePeriod = document.getElementById("noticePeriod").value;
+  const experience = document.getElementById("experience").value;
+  const payg = document.getElementById("payg").value;
+  const date = document.getElementById("date").value;
+  const day = document.getElementById("day").value;
+  const description = document.getElementById("description").value;
 
-//         // Create a temporary URL for the Blob
-//         const url = window.URL.createObjectURL(blob);
+  // Perform your form validation here
+  // You can check if the input values meet your requirements
 
-//         // Create a temporary anchor element to trigger the download
-//         const a = document.createElement('a');
-//         a.href = url;
-//         a.download = 'tracker_entry.pdf';
-//         document.body.appendChild(a);
-//         a.click();
+  // Example: Check if the name is not empty
+  if (name.trim() === "") {
+    alert("Name cannot be empty.");
+    return false; // Prevent form submission
+  }
 
-//         // Clean up by revoking the Blob URL
-//         window.URL.revokeObjectURL(url);
+  // Example: Check if the email is in a valid format using a regular expression
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert("Invalid email format.");
+    return false; // Prevent form submission
+  }
 
-//         // Remove the temporary anchor element
-//         document.body.removeChild(a);
-//     });
-// }
+  // You can add more validation rules as needed
 
-//Json Downloader Functions
+  // If all validation passes, you can allow the form submission
+  return true;
+}
 
-const heading = document.getElementById("typingHeading");
-const phrases = [
-  "Client Record",
-  "Manage Data",
-  "Track Progress",
-  "Stay Organized",
-];
-let index = 0;
-
+// Function to change the heading text periodically
 function typeHeading() {
+  const heading = document.getElementById("typingHeading");
+  const phrases = [
+    "Client Record",
+    "Manage Data",
+    "Track Progress",
+    "Stay Organized",
+  ];
+  let index = 0;
+
   heading.textContent = phrases[index];
   index = (index + 1) % phrases.length;
 }
 
+// Set up a timer to change the heading periodically
 setInterval(typeHeading, 5000); // Change the heading every 5 seconds
